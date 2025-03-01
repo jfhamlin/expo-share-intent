@@ -15,6 +15,11 @@ import {
 } from "./writeIosShareExtensionFiles";
 import { Parameters } from "../types";
 
+// [...prefix to remove.../]ShareExtension/file => ShareExtension/file
+const toRelativePath = (absolutePath: string) => {
+  return absolutePath.replace(/.*\/ShareExtension\//, "ShareExtension/");
+};
+
 export const withShareExtensionXcodeTarget: ConfigPlugin<Parameters> = (
   config,
   parameters,
@@ -88,7 +93,7 @@ export const withShareExtensionXcodeTarget: ConfigPlugin<Parameters> = (
 
     // Add source files to our PbxGroup and our newly created PBXSourcesBuildPhase (ShareViewController.swift)
     pbxProject.addSourceFile(
-      getShareExtensionViewControllerPath(platformProjectRoot, parameters),
+      toRelativePath(getShareExtensionViewControllerPath(platformProjectRoot, parameters)),
       { target: target.uuid },
       pbxGroupKey,
     );
@@ -97,19 +102,19 @@ export const withShareExtensionXcodeTarget: ConfigPlugin<Parameters> = (
     try {
       // ShareExtensionPreprocessor.js
       pbxProject.addResourceFile(
-        getPreprocessorFilePath(platformProjectRoot, parameters),
+        toRelativePath(getPreprocessorFilePath(platformProjectRoot, parameters)),
         { target: target.uuid },
         pbxGroupKey,
       );
       // MainInterface.storyboard
       pbxProject.addResourceFile(
-        getShareExtensionStoryboardFilePath(platformProjectRoot, parameters),
+        toRelativePath(getShareExtensionStoryboardFilePath(platformProjectRoot, parameters)),
         { target: target.uuid },
         pbxGroupKey,
       );
       // PrivacyInfo.xcprivacy
       pbxProject.addResourceFile(
-        getPrivacyInfoFilePath(platformProjectRoot, parameters),
+        toRelativePath(getPrivacyInfoFilePath(platformProjectRoot, parameters)),
         { target: target.uuid },
         pbxGroupKey,
       );
@@ -132,9 +137,9 @@ export const withShareExtensionXcodeTarget: ConfigPlugin<Parameters> = (
           buildSettingsObj["PRODUCT_NAME"] === `"${extensionName}"`
         ) {
           buildSettingsObj["CLANG_ENABLE_MODULES"] = "YES";
-          buildSettingsObj["INFOPLIST_FILE"] = `"${infoPlistFilePath}"`;
+          buildSettingsObj["INFOPLIST_FILE"] = `"${toRelativePath(infoPlistFilePath)}"`;
           buildSettingsObj["CODE_SIGN_ENTITLEMENTS"] =
-            `"${entitlementsFilePath}"`;
+            `"${toRelativePath(entitlementsFilePath)}"`;
           buildSettingsObj["CODE_SIGN_STYLE"] = "Automatic";
           buildSettingsObj["CURRENT_PROJECT_VERSION"] =
             `"${currentProjectVersion}"`;
