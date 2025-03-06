@@ -59,6 +59,12 @@ function getShareExtensionInfoFilePath(platformProjectRoot, parameters) {
 }
 exports.getShareExtensionInfoFilePath = getShareExtensionInfoFilePath;
 function getShareExtensionInfoContent(appName, appIdentifier, parameters) {
+    let preprocessingConfig = {
+        NSExtensionJavaScriptPreprocessingFile: "ShareExtensionPreprocessor",
+    };
+    if (parameters.disablePreprocessor) {
+        preprocessingConfig = {};
+    }
     return plist_1.default.build({
         CFBundleName: "$(PRODUCT_NAME)",
         CFBundleDisplayName: parameters.iosShareExtensionName || `${appName} - Share Extension`,
@@ -73,7 +79,7 @@ function getShareExtensionInfoContent(appName, appIdentifier, parameters) {
                     NSExtensionActivationSupportsWebURLWithMaxCount: 1,
                     NSExtensionActivationSupportsWebPageWithMaxCount: 1,
                 },
-                NSExtensionJavaScriptPreprocessingFile: "ShareExtensionPreprocessor",
+                ...preprocessingConfig,
             },
             NSExtensionMainStoryboard: "MainInterface",
             NSExtensionPointIdentifier: "com.apple.share-services",

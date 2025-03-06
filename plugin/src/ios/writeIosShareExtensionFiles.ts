@@ -128,6 +128,14 @@ export function getShareExtensionInfoContent(
   appIdentifier: string,
   parameters: Parameters,
 ) {
+  let preprocessingConfig: object = {
+    NSExtensionJavaScriptPreprocessingFile: "ShareExtensionPreprocessor",
+  }
+
+  if (parameters.disablePreprocessor) {
+    preprocessingConfig = {}
+  }
+
   return plist.build({
     CFBundleName: "$(PRODUCT_NAME)",
     CFBundleDisplayName:
@@ -143,7 +151,7 @@ export function getShareExtensionInfoContent(
           NSExtensionActivationSupportsWebURLWithMaxCount: 1,
           NSExtensionActivationSupportsWebPageWithMaxCount: 1,
         },
-        NSExtensionJavaScriptPreprocessingFile: "ShareExtensionPreprocessor",
+        ...preprocessingConfig,
       },
       NSExtensionMainStoryboard: "MainInterface",
       NSExtensionPointIdentifier: "com.apple.share-services",

@@ -12,6 +12,7 @@ export type Parameters = {
   preprocessorFunctionFile?: string;
   preprocessorFunctionJS?: string;
   preprocessorInjectJS?: string;
+  disablePreprocessor?: boolean;
   disableAndroid?: boolean;
   disableIOS?: boolean;
 };
